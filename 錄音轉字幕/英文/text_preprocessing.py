@@ -138,7 +138,7 @@ def get_subtitles_from_textfile(textfile, lang="zh-tw", words_per_line=0, max_li
             sentences = cut_sentences(text, remove_punctuations=False, split_middle=True, words_per_line=words_per_line,
                                      max_lines=max_lines)
         elif lang == "de" or lang == "en" or lang == "ru":
-            sentences = cut_sentences(text, remove_punctuations=False, remove_quotation_marks=False, split_middle=True, 
+            sentences = cut_sentences(text, remove_punctuations=False, remove_quotation_marks=False, split_middle=False, 
                                       new_line_after_space=True, words_per_line=words_per_line, max_lines=max_lines)
         return sentences
     

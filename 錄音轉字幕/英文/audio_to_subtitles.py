@@ -9,7 +9,7 @@ audiofile = 'text.mp3'
 
 lang = 'en'
 
-silence_thres = 300
+silence_thres = 320
 
 words_per_line = 100
 
@@ -106,10 +106,17 @@ def fill_blanks_to_subtitles(audiofile, subtitles, char = ' '):
 			
 			
 
-print(get_nonsilent(audiofile, silence_thres))
+# nonsilent = get_nonsilent(audiofile, silence_thres)
+# print(nonsilent)
+# print(len(nonsilent))
+# subtitles = get_subtitles_from_textfile(textfile, lang=lang, words_per_line=0, max_lines=0)
+# print(subtitles)
+# print(len(subtitles))
 subtitles = nonsilent_to_subtitles(textfile, audiofile, silence_thres)
+print(subtitles)
+print(len(subtitles))
 new_subtitles = fill_blanks_to_subtitles(audiofile, subtitles, char=' ')
-print(new_subtitles)
+# print(new_subtitles)
 subtitles_to_file(new_subtitles, 'subtitles.srt')
 
 
