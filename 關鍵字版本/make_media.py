@@ -14,7 +14,6 @@ media_dir = r'.\media'
 
 subtitles_path = os.path.join(output_dir, 'subtitles.srt')
 narration_path = os.path.join(output_dir, 'text.mp3')
-subtitles_bar_path = os.path.join(media_dir, 'subtitles_bar.jpg')
 logo_path = os.path.join(media_dir, 'logo.jpg')
 
 new_para_interval = 1.5
@@ -140,10 +139,6 @@ def make_clip_from_directory(input_directory, output_directory, duration, shuffl
         random.shuffle(media_clips)
         
     media_clips = [media_clip.set_start(idx*avg_duration) for idx,media_clip in enumerate(media_clips)]
-    
-    if subtitles_bar_size:
-        subtitles_bar_clip = ImageClip(subtitles_bar_path).resize(subtitles_bar_size).set_pos(('center', 'bottom'))
-        media_clips = media_clips + [subtitles_bar_clip]
         
     if logo_size:
         logo_clip = ImageClip(logo_path).resize(logo_size).set_pos(('right', 'top')).set_opacity(logo_opacity)
@@ -282,10 +277,6 @@ def make_clip_by_keyword(subtitles, media_source_directory, output_directory, im
         video_subclips.append(subclip)
     
     raw_clips = [concatenate_videoclips(video_subclips)]
-        
-    if subtitles_bar_size:
-        subtitles_bar_clip = ImageClip(subtitles_bar_path).resize(subtitles_bar_size).set_pos(('center', 'bottom'))
-        raw_clips = raw_clips + [subtitles_bar_clip]
 
     if logo_size:
         logo_clip = ImageClip(logo_path).resize(logo_size).set_pos(('right', 'top')).set_opacity(logo_opacity)
@@ -306,22 +297,9 @@ def make_clip_by_keyword(subtitles, media_source_directory, output_directory, im
 
 def insert_audio_and_subtitles(input_clip,output_filename,audio_filename,subtitles,txt_color='white', 
                                fontsize=32, font='DFKai-SB', is_bgm=True, bgm_file='bgm.mp3', bgm_vol=1.0):
-    def annotate(clip, txt, txt_color=txt_color, fontsize=fontsize, font=font):
-        """ Writes a text at the bottom of the clip. """
-        if txt.isspace() or txt=='':
-            return clip
-        else:
-            txtclip = TextClip(txt, fontsize=fontsize, font=font, color=txt_color)
-            cvc = CompositeVideoClip([clip, txtclip.set_pos(('center', 'bottom'))])
-            return cvc.set_duration(clip.duration)
+
     
-    video = input_clip
     print("Input video loaded.")
-    print("Annotating ...")
-    annotated_clips = [annotate(video.subclip(from_t, to_t), txt) for (from_t, to_t), txt in subtitles]
-    print("Concatenating videos ... ")
-    final_clip = concatenate_videoclips(annotated_clips)
-    # final_clip = CompositeVideoClip(
     print("Writing audio ...")
     narration = AudioFileClip(os.path.join(output_dir,audio_filename))
     duration = narration.duration
@@ -331,8 +309,8 @@ def insert_audio_and_subtitles(input_clip,output_filename,audio_filename,subtitl
             bgm = concatenate_audioclips([bgm]*int(math.ceil(duration/bgm.duration)))
         bgm = bgm.set_duration(duration).volumex(bgm_vol)
         narration_with_bgm = CompositeAudioClip([narration,bgm])
-        final_clip = final_clip.set_audio(narration_with_bgm)
+        input_clip = input_clip.set_audio(narration_with_bgm).set_duration(duration)
     else:
-        final_clip = final_clip.set_audio(narration)
+        input_clip = input_clip.set_audio(narration).set_duration(duration)
     print("Writing output video ...")
-    final_clip.write_videofile(os.path.join(output_dir,output_filename))
+    input_clip.write_videofile(os.path.join(output_dir,output_filename))

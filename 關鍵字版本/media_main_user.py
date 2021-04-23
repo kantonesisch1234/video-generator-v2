@@ -41,14 +41,7 @@ video_size = video_size_list[int(video_size_choice)-1]
 shuffle = False
 random_timeframe = False
 
-subtitles_font_size = 64*video_size[1]/1080
-subtitles_font = 'DFKai-SB'
-subtitles_bar_thickness = 2
 words_per_line = 20
-
-subtitles_bar_size = (4000,ceil(subtitles_font_size*4/3)*subtitles_bar_thickness)
-
-
 
 print("\n背景音樂：")
 bgm_list = []
@@ -75,7 +68,6 @@ if __name__ == '__main__':
                          time_spread=time_spread, decay_factor=decay_factor, filter_factor=filter_factor, size=video_size, 
                          height=height, width=width,fps=30, is_sorted = is_sorted, avg_duration=avg_duration, 
                          duration_uniformity = 100, gaussian_steps = 10000,  
-                         subtitles_bar_size=subtitles_bar_size, logo_size=logo_size, logo_opacity=logo_opacity)
-    insert_audio_and_subtitles(input_clip,'output.mp4','text.mp3',subtitles,fontsize=subtitles_font_size,
-    font=subtitles_font, is_bgm=is_bgm, bgm_vol=bgm_vol, bgm_file=bgm_file)
+                         logo_size=logo_size, logo_opacity=logo_opacity)
+    insert_audio_and_subtitles(input_clip,'output.mp4','text.mp3',subtitles, is_bgm=is_bgm, bgm_vol=bgm_vol, bgm_file=bgm_file)
     winsound.Beep(int(freq), int(duration))
